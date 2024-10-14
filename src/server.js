@@ -7,7 +7,7 @@ import contactsRouter from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
-const PORT = Number(env('PORT', '4055'));
+const PORT = Number(env('PORT', '4001'));
 
 export const setupServer = () => {
   const app = express();
