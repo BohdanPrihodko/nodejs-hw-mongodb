@@ -12,6 +12,7 @@ const PORT = Number(env('PORT', '8000'));
 export const setupServer = () => {
   const app = express();
 
+
   app.use(express.json());
   app.use(cors());
 
@@ -44,4 +45,3 @@ export const setupServer = () => {
   });
 };
 
-setupServer();
