@@ -25,7 +25,7 @@ export const setupServer = () => {
   );
 
 
-  app.use('/api', contactsRouter);
+  app.use(contactsRouter);
 
 
   app.get('/', (req, res) => {
