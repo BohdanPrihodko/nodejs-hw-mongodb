@@ -11,7 +11,11 @@ import {
 export const getContacts = async (req, res, next) => {
   try {
     const contacts = await getAllContacts();
-    res.json({ message: 'Contacts list', data: contacts });
+    res.json({
+      status: 200,
+      message: 'Contacts list',
+      data: contacts
+    });
   } catch (err) {
     next(err);
   }
@@ -25,7 +29,11 @@ export const getContact = async (req, res, next) => {
     if (!contact) {
       throw createError(404, 'Contact not found');
     }
-    res.json({ message: `Contact with ID ${contactId}`, data: contact });
+    res.json({
+      status: 200,
+      message: `Contact with ID ${contactId}`,
+      data: contact,
+    });
   } catch (err) {
     next(err);
   }
