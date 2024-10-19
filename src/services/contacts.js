@@ -1,3 +1,5 @@
+// src/services/contacts.js
+
 import Contact from '../db/models/contacts.js';
 
 // Отримання всіх контактів
