@@ -9,7 +9,7 @@ export function validateBody(schema) {
 
       return next(
         createError(
-          400,
+          400, 'Bad Request',
           result.error.details.map((err) => err.message).join('---'),
         ),
       );

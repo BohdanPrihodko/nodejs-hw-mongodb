@@ -1,3 +1,4 @@
+// src/controllers/contacts.js
 import createError from 'http-errors';
 import {
   getAllContacts,
@@ -6,15 +7,46 @@ import {
   updateContactById,
   deleteContactById,
 } from '../services/contacts.js';
+import Contact from '../db/models/contacts.js';
 
 // Контролер для отримання всіх контактів
 export const getContacts = async (req, res, next) => {
   try {
-    const contacts = await getAllContacts();
+    const {
+      page = 1,
+      perPage = 10,
+      sortBy = 'name',
+      sortOrder = 'asc',
+      type,
+      isFavourite,
+    } = req.query;
+
+    const skip = (page - 1) * perPage;
+    const filter = {};
+
+    if (type) filter.contactType = type;
+    if (isFavourite) filter.isFavourite = isFavourite === 'true';
+
+    const totalItems = await getAllContacts();
+    const contacts = await Contact.find(filter)
+      .sort({ [sortBy]: sortOrder })
+      .skip(skip)
+      .limit(Number(perPage));
+
+    const totalPages = Math.ceil(totalItems.length / perPage);
+
     res.json({
       status: 200,
-      message: 'Contacts list',
-      data: contacts
+      message: 'Successfully found contacts!',
+      data: {
+        data: contacts,
+        page: Number(page),
+        perPage: Number(perPage),
+        totalItems: totalItems.length,
+        totalPages,
+        hasPreviousPage: page > 1,
+        hasNextPage: page < totalPages,
+      },
     });
   } catch (err) {
     next(err);
