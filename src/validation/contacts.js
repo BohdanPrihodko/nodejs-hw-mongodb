@@ -1,4 +1,4 @@
-// src/validation/con
+// src/validation/contacts.js
 import Joi from 'joi';
 // POST schema
 export const createContactSchema = Joi.object({
