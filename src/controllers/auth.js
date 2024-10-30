@@ -28,17 +28,19 @@ const setupSession = (session, res) => {
 };
 
 export const loginUserController = async (req, res) => {
-  const session = await loginUser(req.body);
+    const { email, password } = req.body;
+  const session = await loginUser( email, password);
   setupSession(session, res);
   res.status(200).json({
     status: 200,
-    message: 'Successfully logged in a user!',
+    message: 'Successfully logged in an user!',
     data: { accessToken: session.accessToken },
   });
 };
 
 export const logoutUserController = async (req, res) => {
-  if (req.cookies.sessionId) {
+    const { sessionId } = req.cookies;
+  if (sessionId) {
     await logoutUser(req.cookies.sessionId);
   }
   res.clearCookie('refreshToken');

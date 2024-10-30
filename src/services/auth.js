@@ -24,8 +24,8 @@ const createSession = () => {
   return {
     accessToken,
     refreshToken,
-    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES * 60 * 1000),
-    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS * 24 * 60 * 60 * 1000),
+    accessTokenValidUntil: new Date(Date.now() + FIFTEEN_MINUTES),
+    refreshTokenValidUntil: new Date(Date.now() + THIRTY_DAYS),
   };
 };
 
@@ -37,10 +37,10 @@ const handleSession = async (userId) => {
 
 export const loginUser = async (payload) => {
   const user = await User.findOne({ email: payload.email });
-  if (!user) throw createHttpError(401, 'Unauthorized');
+  if (!user) throw createHttpError(401, 'Unauthorized, email is incorrect');
 
   const isPasswordMatch = await bcrypt.compare(payload.password, user.password);
-  if (!isPasswordMatch) throw createHttpError(401, 'Unauthorized');
+  if (!isPasswordMatch) throw createHttpError(401, 'Unauthorized, password is incorrect');
 
   return await handleSession(user._id);
 };
