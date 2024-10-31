@@ -35,11 +35,11 @@ const handleSession = async (userId) => {
   return await Session.create({ userId, ...newSession });
 };
 
-export const loginUser = async (payload) => {
-  const user = await User.findOne({ email: payload.email });
+export const loginUser = async ( email, password) => {
+  const user = await User.findOne({ email });
   if (!user) throw createHttpError(401, 'Unauthorized, email is incorrect');
 
-  const isPasswordMatch = await bcrypt.compare(payload.password, user.password);
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (!isPasswordMatch) throw createHttpError(401, 'Unauthorized, password is incorrect');
 
   return await handleSession(user._id);
