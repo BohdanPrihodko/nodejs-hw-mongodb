@@ -28,16 +28,34 @@ const setupSession = (res, session) => {
 
 
 export const loginUserController = async (req, res) => {
+  try {
     const { email, password } = req.body;
-  const session = await loginUser( email, password);
-  setupSession(session, res);
-  res.status(200).json({
-    status: 200,
-    message: 'Successfully logged in an user!',
-    data: { accessToken: session.accessToken },
-  });
-};
+    const session = await loginUser(email, password);
 
+    if (
+      !session ||
+      !session.refreshToken ||
+      !session.refreshTokenValidUntil ||
+      !session.accessToken
+    ) {
+      throw new Error('Invalid session data');
+    }
+
+    setupSession(res, session);
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully logged in a user!',
+      data: { accessToken: session.accessToken },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: 500,
+      message: 'Login failed',
+      error: error.message,
+    });
+  }
+};
 export const logoutUserController = async (req, res) => {
     const { sessionId } = req.cookies;
   if (sessionId) {
@@ -53,7 +71,7 @@ export const refreshUserSessionController = async (req, res) => {
     sessionId: req.cookies.sessionId,
     refreshToken: req.cookies.refreshToken,
   });
-  setupSession(session, res);
+  setupSession(res, session);
   res.status(200).json({
     status: 200,
     message: 'Successfully refreshed a session!',

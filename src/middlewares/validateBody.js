@@ -1,4 +1,4 @@
-import createError from 'http-errors';
+import createHttpError from 'http-errors';
 
 export function validateBody(schema) {
   return (req, res, next) => {
@@ -8,8 +8,9 @@ export function validateBody(schema) {
       console.log(result.error.details);
 
       return next(
-        createError(
-          400, 'Bad Request',
+        createHttpError(
+          400,
+          'Bad Request',
           result.error.details.map((err) => err.message).join('---'),
         ),
       );
