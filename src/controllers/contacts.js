@@ -1,7 +1,6 @@
 // src/controllers/contacts.js
 import createHttpError from 'http-errors';
 import {
-  getAllContacts,
   getContactById,
   createContact,
   updateContactById,
@@ -9,31 +8,23 @@ import {
 } from '../services/contacts.js';
 import Contact from '../db/models/contacts.js';
 
-// Контролер для отримання всіх контактів
+// Контролер для отримання всіх контактів користувача
 export const getContacts = async (req, res, next) => {
   try {
-    const {
-      page = 1,
-      perPage = 10,
-      sortBy = 'name',
-      sortOrder = 'asc',
-      type,
-      isFavourite,
-    } = req.query;
-
+    const { page = 1, perPage = 10, sortBy = 'name', sortOrder = 'asc', type, isFavourite } = req.query;
     const skip = (page - 1) * perPage;
-    const filter = {};
+    const filter = { userId: req.user._id };
 
     if (type) filter.contactType = type;
     if (isFavourite) filter.isFavourite = isFavourite === 'true';
 
-    const totalItems = await getAllContacts();
+    const totalItems = await Contact.countDocuments(filter);
     const contacts = await Contact.find(filter)
       .sort({ [sortBy]: sortOrder })
       .skip(skip)
       .limit(Number(perPage));
 
-    const totalPages = Math.ceil(totalItems.length / perPage);
+    const totalPages = Math.ceil(totalItems / perPage);
 
     res.json({
       status: 200,
@@ -42,7 +33,7 @@ export const getContacts = async (req, res, next) => {
         data: contacts,
         page: Number(page),
         perPage: Number(perPage),
-        totalItems: totalItems.length,
+        totalItems,
         totalPages,
         hasPreviousPage: page > 1,
         hasNextPage: page < totalPages,
@@ -53,7 +44,7 @@ export const getContacts = async (req, res, next) => {
   }
 };
 
-// Контролер для отримання контакту за ID
+// Контролери для роботи з конкретним контактом
 export const getContact = async (req, res, next) => {
   const { contactId } = req.params;
   try {
