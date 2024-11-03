@@ -23,6 +23,5 @@ export const deleteContactById = ctrlWrapper(async (contactId, userId) => {
 });
 
 // Створення нового контакту з userId
-export const createContact = ctrlWrapper(async (contactData, userId) => {
-  return await Contact.create({ ...contactData, userId });
-});
+export const createContact = (contactData, userId) =>
+  Contact.create({ ...contactData, userId });
