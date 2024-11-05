@@ -10,6 +10,8 @@ import {
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import { isValidId } from '../middlewares/isValidId.js';
 import { validateBody } from '../middlewares/validateBody.js';
+import { upload } from '../middlewares/multer.js';
+
 import {
   createContactSchema,
   updateContactSchema,
@@ -17,21 +19,25 @@ import {
 
 const router = express.Router();
 
-
-
 router.get('/', ctrlWrapper(getContacts));
+
 router.get('/:contactId', isValidId('contactId'), ctrlWrapper(getContact));
+
 router.post(
   '/',
+  upload.single('photo'),
   validateBody(createContactSchema),
   ctrlWrapper(createContactController),
 );
+
 router.patch(
   '/:contactId',
+  upload.single('photo'),
   isValidId('contactId'),
   validateBody(updateContactSchema),
   ctrlWrapper(updateContactController),
 );
+
 router.delete(
   '/:contactId',
   isValidId('contactId'),
