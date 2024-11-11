@@ -1,0 +1,95 @@
+tags:
+  - Contacts
+summary: Update contact by id
+operationId: patchContact
+description: 'Contact update/edit'
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: contactId
+    required: true
+    schema:
+      type: string
+      example: 65e4decdd286b30065d54af9
+requestBody:
+  content:
+    multipart/form-data:
+      schema:
+        type: object
+        properties:
+          name:
+            description: "Contact's name"
+            type: string
+            example: 'John Doe'
+          phoneNumber:
+            description: "Contact's phone number"
+            type: string
+            example: '+380123456789'
+          email:
+            description: "Contact's email"
+            type: string
+            example: 'johndoe@gmail.com'
+          contactType:
+            description: 'Contact category'
+            type: string
+            enum: ['work', 'home', 'personal']
+            example: home
+            default: personal
+          isFavourite:
+            description: 'Favorite mark'
+            type: boolean
+            example: false
+            default: false
+          photo:
+            description: "Contact's photo"
+            type: string
+            format: binary
+            default: null
+responses:
+  '200':
+    description: 'Updated a contact'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 201
+            message:
+              type: string
+              example: 'Successfully patched a contact!'
+            data:
+              $ref: ../../../components/schemas/contact.yaml
+  '401':
+    $ref: ../../../components/responses/401.yaml
+  '404':
+    description: 'Contact not found'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: 'NotFoundError'
+            data:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  example: 'Contact not found'

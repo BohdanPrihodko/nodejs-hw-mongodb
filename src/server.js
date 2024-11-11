@@ -8,6 +8,7 @@ import router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { UPLOAD_DIR } from './constants/index.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const PORT = Number(env('PORT', '8000'));
 
@@ -29,6 +30,7 @@ export const setupServer = () => {
   app.use(router);
 
   app.use('/uploads', express.static(UPLOAD_DIR));
+  app.use('/api-docs', swaggerDocs());
 
   app.get('/', (req, res) => {
     res.json({
