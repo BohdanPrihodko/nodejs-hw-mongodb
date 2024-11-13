@@ -181,7 +181,6 @@
                 "required": [
                   "name",
                   "phoneNumber",
-                  "email",
                   "contactType"
                 ],
                 "properties": {
@@ -586,11 +585,8 @@
           "_id",
           "name",
           "phoneNumber",
-          "email",
-          "isFavourite",
           "contactType",
           "userId",
-          "photo",
           "createdAt",
           "updatedAt"
         ],
